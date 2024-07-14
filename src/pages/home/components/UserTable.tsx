@@ -4,9 +4,11 @@ import { EditUserData } from "../../../types";
 import UserDelete from "./UserDelete";
 import UserEdit from "./UserEdit";
 import { useRef } from "react";
+import { useGetAuth } from "../../../hooks/useAuth";
 
 function UserTable() {
   const { Column } = Table;
+  const { isLoading: isAuthLoading } = useGetAuth();
   const { isLoading, data } = useGetUsers();
   const userEditRef = useRef();
 
@@ -21,7 +23,7 @@ function UserTable() {
     <>
       <Table
         dataSource={data?.data || []}
-        loading={isLoading}
+        loading={isLoading && !isAuthLoading}
         pagination={false}
         rowKey={(text) => text.id}
         size="middle"
