@@ -9,7 +9,7 @@ function ProductFilter() {
     setSearchParams({ priceGreaterThan: value });
   };
   return (
-    <div className="flex align-center gap-2">
+    <div className="flex items-center gap-2">
       <span className="leading-[32px]">Price:</span>
       <Select
         defaultValue={priceGreaterThan}
