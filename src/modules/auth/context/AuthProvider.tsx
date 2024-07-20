@@ -8,7 +8,6 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   const { isLoading, isAuthenticated } = useGetUser();
 
   useEffect(() => {
-    console.log(isAuthenticated, isLoading);
     if (!isAuthenticated && !isLoading) {
       navigate("/login");
     }

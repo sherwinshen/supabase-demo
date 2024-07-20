@@ -2,6 +2,8 @@ import { Table } from "antd";
 import { useGetOrders } from "../../hooks/useOrder";
 import OrderDelete from "./OrderDelete";
 import { OrderData } from "./type";
+import { useEffect } from "react";
+import { createSubscribe, removeSubscribe } from "../../services/apis/apiOrder";
 
 function OrderTable() {
   const { Column } = Table;
@@ -12,6 +14,11 @@ function OrderTable() {
     product: item.products.product,
     productName: item.products.productName,
   }));
+
+  useEffect(() => {
+    const myChannel = createSubscribe();
+    return () => removeSubscribe(myChannel);
+  }, []);
 
   return (
     <Table

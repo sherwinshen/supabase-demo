@@ -1,3 +1,4 @@
+import { RealtimeChannel } from "@supabase/supabase-js";
 import supabase from "../supabase";
 
 // 增(mock数据)
@@ -42,4 +43,17 @@ export const getOrders = async () => {
     throw new Error(error.message);
   }
   return data;
+};
+
+export const createSubscribe = () => {
+  return supabase
+    .channel("custom-all-channel")
+    .on("postgres_changes", { event: "*", schema: "public", table: "orders" }, (payload) => {
+      console.log("Change received!", payload);
+    })
+    .subscribe();
+};
+
+export const removeSubscribe = (myChannel: RealtimeChannel) => {
+  supabase.removeChannel(myChannel);
 };
