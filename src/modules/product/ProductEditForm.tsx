@@ -66,6 +66,7 @@ function ProductEditForm({ children }: { children: React.ReactNode }) {
         confirmLoading={disabled}
         onOk={handleOk}
         onCancel={handleCancel}
+        forceRender
       >
         <Form form={form} labelCol={{ span: 7 }} labelAlign="left" className="!mt-8">
           <Form.Item label="Product" name="product" rules={[{ required: true, message: "Please input product!" }]}>
