@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import ProductEditContext from "./context/ProductEditContext";
 import { CreateProductData, EditProductData } from "./type";
-import { Form, Input, InputNumber, Modal } from "antd";
+import { Form, Input, InputNumber, Modal, Upload } from "antd";
 import { useCreateProduct, useUpdateProduct } from "../../hooks/useProduct";
 
 const defaultData = {
@@ -15,6 +15,7 @@ function ProductEditForm({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isCreate, setIsCreate] = useState(false);
   const [initData, setInitData] = useState<EditProductData | CreateProductData | undefined>(undefined);
+  const [pictureFile, setPictureFile] = useState<File | null>(null);
   const { isCreating, handleCreateProduct } = useCreateProduct();
   const { isUpdating, handleUpdateProduct } = useUpdateProduct();
   const [form] = Form.useForm();
@@ -29,11 +30,13 @@ function ProductEditForm({ children }: { children: React.ReactNode }) {
   const handleOpen = (isCreate: boolean, data?: EditProductData | CreateProductData) => {
     setIsCreate(isCreate);
     setInitData(data || defaultData);
+    setPictureFile(null);
     form.setFieldsValue(data);
     setIsOpen(true);
   };
   const handleClose = () => {
     setIsOpen(false);
+    setPictureFile(null);
   };
 
   const handleOk = () => {
@@ -41,10 +44,10 @@ function ProductEditForm({ children }: { children: React.ReactNode }) {
       .validateFields()
       .then(async (data) => {
         if (isCreate) {
-          handleCreateProduct(data, { onSuccess: () => handleClose() });
+          handleCreateProduct({ ...data, pictureFile }, { onSuccess: () => handleClose() });
         } else {
           handleUpdateProduct(
-            { id: (initData as EditProductData)!.id, updateProduct: data },
+            { id: (initData as EditProductData)!.id, updateProduct: { ...data, pictureFile } },
             { onSuccess: () => handleClose() }
           );
         }
@@ -55,6 +58,11 @@ function ProductEditForm({ children }: { children: React.ReactNode }) {
   };
 
   const handleCancel = () => handleClose();
+
+  const handleBeforeUpload = (file: File) => {
+    setPictureFile(file);
+    return false;
+  };
 
   return (
     <ProductEditContext.Provider value={{ handleOpen }}>
@@ -84,6 +92,19 @@ function ProductEditForm({ children }: { children: React.ReactNode }) {
           </Form.Item>
           <Form.Item label="Price" name="price" rules={[{ required: true, message: "Please input price!" }]}>
             <InputNumber disabled={disabled} />
+          </Form.Item>
+          <Form.Item label="Picture">
+            <Upload
+              key={String(isOpen)}
+              maxCount={1}
+              listType="picture-card"
+              beforeUpload={handleBeforeUpload}
+              disabled={disabled}
+            >
+              <button style={{ border: 0, background: "none" }} type="button">
+                +
+              </button>
+            </Upload>
           </Form.Item>
         </Form>
       </Modal>

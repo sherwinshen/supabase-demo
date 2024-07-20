@@ -3,6 +3,8 @@ export type CreateProductData = {
   productName: string;
   productDescription?: string;
   price: number;
+  pictureFile?: File;
+  pictureUrl?: string;
 };
 
 export type EditProductData = {
@@ -11,6 +13,8 @@ export type EditProductData = {
   productName: string;
   productDescription?: string;
   price: number;
+  pictureFile?: File;
+  pictureUrl?: string;
 };
 
 export type ProductData = {
@@ -19,4 +23,5 @@ export type ProductData = {
   productName: string;
   productDescription?: string;
   price: number;
+  pictureUrl?: string;
 };
